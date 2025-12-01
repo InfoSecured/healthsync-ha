@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+import logging
 from typing import Any
 
 from homeassistant.components import webhook
@@ -14,6 +15,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_send
 from .const import DOMAIN, DEFAULT_METRIC_UNITS, signal_metric_update, signal_new_metric
 
 MAX_HISTORY = 10
+_LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -53,13 +55,25 @@ class AppleHealthManager:
         async def _handle_webhook(
             hass: HomeAssistant, _id: str, request
         ) -> webhook.WebhookResponse:
-            payload = await request.json()
+            try:
+                payload = await request.json()
+            except Exception as err:
+                _LOGGER.warning("Webhook received non-JSON payload: %s", err)
+                return webhook.WebhookResponse(
+                    body="invalid json",
+                    status=400,
+                    headers={"Content-Type": "text/plain"},
+                )
+
+            _LOGGER.debug("Webhook payload received: %s", payload)
             if isinstance(payload, list):
                 for item in payload:
                     if isinstance(item, dict):
                         self._process_payload(item)
             elif isinstance(payload, dict):
                 self._process_payload(payload)
+            else:
+                _LOGGER.warning("Webhook payload ignored (not dict/list): %s", type(payload))
             return webhook.WebhookResponse(
                 body="ok", status=200, headers={"Content-Type": "text/plain"}
             )
@@ -71,15 +85,18 @@ class AppleHealthManager:
             webhook_id,
             _handle_webhook,
         )
+        _LOGGER.info("Registered HealthSync HA webhook id %s", webhook_id)
 
     def unregister(self, webhook_id: str) -> None:
         """Unregister the webhook."""
         webhook.async_unregister(self.hass, webhook_id)
+        _LOGGER.info("Unregistered HealthSync HA webhook id %s", webhook_id)
 
     def _process_payload(self, payload: dict[str, Any]) -> None:
         """Validate and dispatch incoming payload."""
         metric = payload.get("metric")
         if not metric:
+            _LOGGER.warning("Webhook payload missing 'metric': %s", payload)
             return
         value = payload.get("value")
         unit = payload.get("unit") or DEFAULT_METRIC_UNITS.get(metric, "")
