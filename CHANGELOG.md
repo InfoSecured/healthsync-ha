@@ -5,6 +5,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 ### Added
+- Pending
+
+### Changed
+- Pending
+
+### Fixed
+- Pending
+
+## [0.1.1] - 2024-12-01
+### Added
 - Initial Apple HealthKit Bridge integration skeleton, webhook handler, sensors, and CI syntax check.
 
 ### Changed
