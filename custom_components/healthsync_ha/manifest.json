@@ -1,12 +1,11 @@
 {
   "domain": "healthsync_ha",
   "name": "HealthSync HA",
-  "version": "0.1.1",
+  "codeowners": ["@InfoSecured"],
+  "config_flow": true,
   "documentation": "https://github.com/InfoSecured/healthsync-ha",
+  "iot_class": "local_push",
   "issue_tracker": "https://github.com/InfoSecured/healthsync-ha/issues",
   "requirements": [],
-  "codeowners": [
-    "@owner"
-  ],
-  "iot_class": "local_push"
+  "version": "0.1.1"
 }
