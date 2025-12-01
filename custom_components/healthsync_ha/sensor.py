@@ -99,9 +99,8 @@ class AppleHealthMetricSensor(SensorEntity):
     @property
     def device_class(self) -> SensorDeviceClass | None:
         """Return the device class for this sensor."""
+        # Only use device classes that exist in Home Assistant
         device_class_map = {
-            "heart_rate": SensorDeviceClass.HEART_RATE,
-            "resting_heart_rate": SensorDeviceClass.HEART_RATE,
             "basal_body_temperature": SensorDeviceClass.TEMPERATURE,
             "weight": SensorDeviceClass.WEIGHT,
             "lean_body_mass": SensorDeviceClass.WEIGHT,

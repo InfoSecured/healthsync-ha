@@ -9,6 +9,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # Valid metric ranges (min, max) for numeric health data
 METRIC_RANGES = {
+    "connectivity_test": (0, 1),  # Test metric for webhook validation
     "heart_rate": (30, 250),
     "resting_heart_rate": (30, 150),
     "heart_rate_variability": (0, 300),
@@ -35,6 +36,7 @@ METRIC_RANGES = {
 
 # Valid units for each metric type
 VALID_UNITS = {
+    "connectivity_test": {"count"},
     "heart_rate": {"bpm", "beats/min"},
     "resting_heart_rate": {"bpm", "beats/min"},
     "heart_rate_variability": {"ms"},
