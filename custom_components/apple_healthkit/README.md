@@ -1,11 +1,11 @@
-# Apple HealthKit Bridge (Home Assistant)
+# HealthSync HA (Home Assistant)
 
-This custom integration accepts data from the **HA Health Bridge** iOS app (or any client) via a Home Assistant webhook and exposes metrics as sensors.
+This custom integration accepts data from the **HealthSync HA** iOS app (or any client) via a Home Assistant webhook and exposes metrics as sensors.
 
 ## Install
 1. Copy `custom_components/apple_healthkit/` into your Home Assistant config directory.
 2. Restart Home Assistant.
-3. Add Integration → “Apple HealthKit Bridge”.
+3. Add Integration → “HealthSync HA”.
 
 ## Config Flow
 - Provide a friendly name (e.g., “Jason’s iPhone Health”).
