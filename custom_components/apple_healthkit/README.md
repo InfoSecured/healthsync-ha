@@ -28,3 +28,4 @@ If you prefer MQTT, point the iOS app to publish `health/<device>/<metric>` payl
 
 ## Versioning
 - Semantic Versioning: MAJOR when payload/entity behavior changes incompatibly, MINOR when adding metrics or capabilities, PATCH for fixes. Update `manifest.json` and tag releases accordingly.
+- Tag helper: run `scripts/tag_release.sh <version>` from repo root after merging to main; then `git push origin v<version>`.
