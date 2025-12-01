@@ -106,8 +106,6 @@ class AppleHealthMetricSensor(SensorEntity):
             "lean_body_mass": SensorDeviceClass.WEIGHT,
             "distance_walking_running": SensorDeviceClass.DISTANCE,
             "distance_cycling": SensorDeviceClass.DISTANCE,
-            "active_energy_burned": SensorDeviceClass.ENERGY,
-            "basal_energy_burned": SensorDeviceClass.ENERGY,
         }
         return device_class_map.get(self.metric)
 
