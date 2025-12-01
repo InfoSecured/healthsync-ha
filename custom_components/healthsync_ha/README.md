@@ -7,6 +7,7 @@ This custom integration accepts data from the **HealthSync HA** iOS app (or any 
 2. Restart Home Assistant.
 3. Add Integration → “HealthSync HA”.
 4. After adding, check Home Assistant Notifications for the generated webhook ID (endpoint: `/api/webhook/<ID>` on your HA base URL).
+5. In the Options for the integration, choose your units (US/metric: weight, distance, temperature, energy, hydration) and copy the webhook ID if needed.
 
 ## Config Flow
 - Provide a friendly name (e.g., “Jason’s iPhone Health”).
@@ -29,6 +30,11 @@ If you prefer MQTT, point the iOS app to publish `health/<device>/<metric>` payl
 
 ## Options (Units)
 - In the integration Options, choose units for weight (lb/kg), distance (mi/km), temperature (F/C), energy (kcal/kJ), and hydration (fl oz/L). Defaults follow your HA system units where possible.
+
+## iOS App Setup
+- Install the HealthSync HA iOS app, enable HealthKit (read) and background fetch in Xcode, and add privacy descriptions.
+- In the app, enter your HA base URL (e.g., `https://<ha-host>`), paste the webhook ID from this integration, enable desired metrics (or Select All), tap Save, then “Authorize & Start Sync.”
+- Use “Test Webhook” in the app to confirm HA is reachable; HA logs will show incoming payloads, and sensors will appear dynamically.
 
 ## Versioning
 - Semantic Versioning: MAJOR when payload/entity behavior changes incompatibly, MINOR when adding metrics or capabilities, PATCH for fixes. Update `manifest.json` and tag releases accordingly.
