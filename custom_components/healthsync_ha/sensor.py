@@ -67,6 +67,8 @@ class AppleHealthMetricSensor(SensorEntity):
             signal_metric_update(self.entry.entry_id),
             self._handle_update,
         )
+        # Publish the initial state so the first sample is visible immediately.
+        self.async_write_ha_state()
 
     async def async_will_remove_from_hass(self) -> None:
         """Clean up listeners."""
