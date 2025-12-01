@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CHANGELOG = ROOT / "CHANGELOG.md"
-MANIFEST = ROOT / "custom_components" / "apple_healthkit" / "manifest.json"
+MANIFEST = ROOT / "custom_components" / "healthsync_ha" / "manifest.json"
 
 
 def update_manifest(version: str) -> None:

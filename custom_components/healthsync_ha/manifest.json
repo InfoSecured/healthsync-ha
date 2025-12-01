@@ -1,5 +1,5 @@
 {
-  "domain": "apple_healthkit",
+  "domain": "healthsync_ha",
   "name": "HealthSync HA",
   "codeowners": [
     "@InfoSecured"
@@ -9,5 +9,5 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/InfoSecured/healthsync-ha/issues",
   "requirements": [],
-  "version": "0.1.2"
+  "version": "0.1.3"
 }
