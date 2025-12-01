@@ -1,0 +1,11 @@
+{
+  "domain": "apple_healthkit",
+  "name": "Apple HealthKit Bridge",
+  "version": "0.1.0",
+  "documentation": "https://www.home-assistant.io/integrations/",
+  "requirements": [],
+  "codeowners": [
+    "@owner"
+  ],
+  "iot_class": "local_push"
+}
