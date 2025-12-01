@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.components import persistent_notification
 
-from .const import DOMAIN, PLATFORMS, CONF_WEBHOOK_ID
+from .const import DOMAIN, PLATFORMS, CONF_WEBHOOK_ID, DEFAULT_OPTIONS_METRIC
 from .webhook import AppleHealthManager
 
 
@@ -17,7 +17,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Apple HealthKit Bridge from a config entry."""
-    manager = AppleHealthManager(hass, entry.entry_id)
+    manager = AppleHealthManager(hass, entry.entry_id, entry.options or DEFAULT_OPTIONS_METRIC)
     manager.register(entry.data[CONF_WEBHOOK_ID])
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {

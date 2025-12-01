@@ -27,6 +27,9 @@ Supported metrics map to sensor IDs like `sensor.apple_health_steps` and use the
 ## Optional MQTT
 If you prefer MQTT, point the iOS app to publish `health/<device>/<metric>` payloads. Extend the integration by subscribing to those topics or bridging MQTT to webhook with an HA automation.
 
+## Options (Units)
+- In the integration Options, choose units for weight (lb/kg), distance (mi/km), temperature (F/C), energy (kcal/kJ), and hydration (fl oz/L). Defaults follow your HA system units where possible.
+
 ## Versioning
 - Semantic Versioning: MAJOR when payload/entity behavior changes incompatibly, MINOR when adding metrics or capabilities, PATCH for fixes. Update `manifest.json` and tag releases accordingly.
 - Tag helper: run `scripts/tag_release.sh <version>` from repo root after merging to main; then `git push origin v<version>`.

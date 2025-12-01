@@ -6,6 +6,11 @@ PLATFORMS: list[str] = ["sensor"]
 CONF_NAME = "name"
 CONF_DEVICE_ID = "device_id"
 CONF_WEBHOOK_ID = "webhook_id"
+CONF_WEIGHT_UNIT = "weight_unit"
+CONF_DISTANCE_UNIT = "distance_unit"
+CONF_TEMPERATURE_UNIT = "temperature_unit"
+CONF_ENERGY_UNIT = "energy_unit"
+CONF_HYDRATION_UNIT = "hydration_unit"
 
 # Default set of supported metrics and their native units.
 DEFAULT_METRIC_UNITS = {
@@ -42,3 +47,12 @@ def signal_new_metric(entry_id: str) -> str:
 
 def signal_metric_update(entry_id: str) -> str:
     return f"{DOMAIN}_{entry_id}_metric_update"
+
+
+DEFAULT_OPTIONS_METRIC = {
+    CONF_WEIGHT_UNIT: "lb",
+    CONF_DISTANCE_UNIT: "mi",
+    CONF_TEMPERATURE_UNIT: "degF",
+    CONF_ENERGY_UNIT: "kcal",
+    CONF_HYDRATION_UNIT: "fl_oz",
+}
