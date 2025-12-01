@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.components import persistent_notification
 
 from .const import DOMAIN, PLATFORMS, CONF_WEBHOOK_ID
 from .webhook import AppleHealthManager
@@ -24,6 +25,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    # Surface the webhook ID so users can copy it easily.
+    persistent_notification.async_create(
+        hass,
+        f"HealthSync HA Webhook ID: `{entry.data[CONF_WEBHOOK_ID]}`\n\n"
+        "Use it with your Home Assistant base URL: `/api/webhook/<ID>`.",
+        title=entry.title or "HealthSync HA",
+        notification_id=f"{DOMAIN}_{entry.entry_id}_webhook",
+    )
     return True
 
 

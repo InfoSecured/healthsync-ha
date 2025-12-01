@@ -6,6 +6,7 @@ This custom integration accepts data from the **HealthSync HA** iOS app (or any 
 1. Copy `custom_components/healthsync_ha/` into your Home Assistant config directory.
 2. Restart Home Assistant.
 3. Add Integration → “HealthSync HA”.
+4. After adding, check Home Assistant Notifications for the generated webhook ID (endpoint: `/api/webhook/<ID>` on your HA base URL).
 
 ## Config Flow
 - Provide a friendly name (e.g., “Jason’s iPhone Health”).
