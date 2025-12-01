@@ -25,3 +25,6 @@ Supported metrics map to sensor IDs like `sensor.apple_health_steps` and use the
 
 ## Optional MQTT
 If you prefer MQTT, point the iOS app to publish `health/<device>/<metric>` payloads. Extend the integration by subscribing to those topics or bridging MQTT to webhook with an HA automation.
+
+## Versioning
+- Semantic Versioning: MAJOR when payload/entity behavior changes incompatibly, MINOR when adding metrics or capabilities, PATCH for fixes. Update `manifest.json` and tag releases accordingly.
