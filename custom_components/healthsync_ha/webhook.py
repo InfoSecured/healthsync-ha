@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import logging
 from typing import Any
 
@@ -23,8 +23,11 @@ from .const import (
     CONF_ENERGY_UNIT,
     CONF_HYDRATION_UNIT,
 )
+from .validation import validate_payload, sanitize_payload
 
 MAX_HISTORY = 10
+RATE_LIMIT_REQUESTS = 60  # Max requests per window
+RATE_LIMIT_WINDOW = timedelta(minutes=1)  # Time window for rate limiting
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -59,6 +62,7 @@ class AppleHealthManager:
         self.entry_id = entry_id
         self.options = options
         self.metrics: dict[str, MetricState] = {}
+        self._rate_limit_timestamps: deque[datetime] = deque(maxlen=RATE_LIMIT_REQUESTS)
 
     def register(self, webhook_id: str) -> None:
         """Register a webhook handler for this entry."""
@@ -66,6 +70,28 @@ class AppleHealthManager:
         async def _handle_webhook(
             hass: HomeAssistant, _id: str, request
         ) -> webhook.WebhookResponse:
+            # Rate limiting check
+            now = datetime.now(timezone.utc)
+            self._rate_limit_timestamps.append(now)
+
+            # Clean old timestamps outside the window
+            cutoff = now - RATE_LIMIT_WINDOW
+            while self._rate_limit_timestamps and self._rate_limit_timestamps[0] < cutoff:
+                self._rate_limit_timestamps.popleft()
+
+            # Check if rate limit exceeded
+            if len(self._rate_limit_timestamps) > RATE_LIMIT_REQUESTS:
+                _LOGGER.warning(
+                    "Rate limit exceeded: %d requests in last %s",
+                    len(self._rate_limit_timestamps),
+                    RATE_LIMIT_WINDOW
+                )
+                return webhook.WebhookResponse(
+                    body="rate limit exceeded",
+                    status=429,
+                    headers={"Content-Type": "text/plain", "Retry-After": "60"},
+                )
+
             try:
                 payload = await request.json()
             except Exception as err:
@@ -78,6 +104,14 @@ class AppleHealthManager:
 
             _LOGGER.info("Webhook payload received: %s", payload)
             if isinstance(payload, list):
+                # Validate list size to prevent DoS
+                if len(payload) > 100:
+                    _LOGGER.warning("Webhook payload too large: %d items, max 100", len(payload))
+                    return webhook.WebhookResponse(
+                        body="payload too large",
+                        status=413,
+                        headers={"Content-Type": "text/plain"},
+                    )
                 for item in payload:
                     if isinstance(item, dict):
                         self._process_payload(item)
@@ -105,6 +139,15 @@ class AppleHealthManager:
 
     def _process_payload(self, payload: dict[str, Any]) -> None:
         """Validate and dispatch incoming payload."""
+        # Sanitize payload first to prevent injection attacks
+        payload = sanitize_payload(payload)
+
+        # Validate payload structure and content
+        is_valid, error = validate_payload(payload)
+        if not is_valid:
+            _LOGGER.warning("Invalid webhook payload: %s - %s", error, payload)
+            return
+
         metric = payload.get("metric")
         if not metric:
             _LOGGER.warning("Webhook payload missing 'metric': %s", payload)
@@ -141,7 +184,8 @@ class AppleHealthManager:
             state.source_device = device or state.source_device
             if isinstance(value, (int, float)):
                 state.samples.append(float(value))
-        async_dispatcher_send(self.hass, signal_metric_update(self.entry_id), metric)
+        # Send metric-specific signal for efficiency (only target sensor receives it)
+        async_dispatcher_send(self.hass, signal_metric_update(self.entry_id, metric))
 
     def _convert_units(self, metric: str, value: Any, unit: str) -> tuple[Any, str]:
         """Convert incoming value/unit to user-selected units."""

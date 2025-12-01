@@ -25,6 +25,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Register update listener for options changes
+    entry.async_on_unload(entry.add_update_listener(async_update_options))
+
     # Surface the webhook ID so users can copy it easily.
     persistent_notification.async_create(
         hass,
@@ -34,6 +38,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         notification_id=f"{DOMAIN}_{entry.entry_id}_webhook",
     )
     return True
+
+
+async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Update options."""
+    # Reload the config entry to apply new options
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

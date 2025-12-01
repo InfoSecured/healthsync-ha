@@ -18,7 +18,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install ruff pytest
       - name: Syntax check
-        run: python -m compileall custom_components/apple_healthkit
+        run: python -m compileall custom_components/healthsync_ha
       - name: Ruff lint (ignore if config absent)
         run: ruff check custom_components || true
       - name: Run pytest if tests/ exists

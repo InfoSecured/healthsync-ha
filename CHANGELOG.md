@@ -15,13 +15,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [0.1.3] - 2025-12-01
 ### Added
-- Pending
+- None
 
 ### Changed
-- Pending
+- None
 
 ### Fixed
-- Pending
+- CI/CD workflow paths updated from old `apple_healthkit` to `healthsync_ha` directory name
+- NameError in config_flow.py where `opts` variable was used before definition
+- GitHub Actions release workflow now correctly references the healthsync_ha manifest path
 ## [0.1.2] - 2024-12-01
 ### Added
 - HACS metadata and root README.

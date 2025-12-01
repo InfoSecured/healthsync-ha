@@ -4,10 +4,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.entity import DeviceInfo
 
 from .const import (
     CONF_WEBHOOK_ID,
@@ -62,9 +67,10 @@ class AppleHealthMetricSensor(SensorEntity):
 
     async def async_added_to_hass(self) -> None:
         """Register dispatcher callbacks."""
+        # Listen for metric-specific updates (more efficient than global signal)
         self._unsub = async_dispatcher_connect(
             self.hass,
-            signal_metric_update(self.entry.entry_id),
+            signal_metric_update(self.entry.entry_id, self.metric),
             self._handle_update,
         )
         # Publish the initial state so the first sample is visible immediately.
@@ -91,11 +97,127 @@ class AppleHealthMetricSensor(SensorEntity):
         return state.as_attributes() if state else {}
 
     @property
+    def device_class(self) -> SensorDeviceClass | None:
+        """Return the device class for this sensor."""
+        device_class_map = {
+            "heart_rate": SensorDeviceClass.HEART_RATE,
+            "resting_heart_rate": SensorDeviceClass.HEART_RATE,
+            "basal_body_temperature": SensorDeviceClass.TEMPERATURE,
+            "weight": SensorDeviceClass.WEIGHT,
+            "lean_body_mass": SensorDeviceClass.WEIGHT,
+            "distance_walking_running": SensorDeviceClass.DISTANCE,
+            "distance_cycling": SensorDeviceClass.DISTANCE,
+            "active_energy_burned": SensorDeviceClass.ENERGY,
+            "basal_energy_burned": SensorDeviceClass.ENERGY,
+        }
+        return device_class_map.get(self.metric)
+
+    @property
+    def state_class(self) -> SensorStateClass | None:
+        """Return the state class for this sensor."""
+        # Most health metrics are measurements
+        if self.metric in (
+            "heart_rate",
+            "resting_heart_rate",
+            "heart_rate_variability",
+            "respiratory_rate",
+            "vo2_max",
+            "blood_glucose",
+            "weight",
+            "oxygen_saturation",
+            "body_fat_percentage",
+            "lean_body_mass",
+            "body_mass_index",
+            "basal_body_temperature",
+            "environmental_sound_exposure",
+            "blood_pressure_systolic",
+            "blood_pressure_diastolic",
+        ):
+            return SensorStateClass.MEASUREMENT
+
+        # Cumulative metrics that increase over time
+        if self.metric in (
+            "step_count",
+            "active_energy_burned",
+            "basal_energy_burned",
+            "distance_walking_running",
+            "distance_cycling",
+            "flights_climbed",
+            "hydration",
+        ):
+            return SensorStateClass.TOTAL_INCREASING
+
+        return None
+
+    @property
+    def icon(self) -> str | None:
+        """Return the icon for this sensor."""
+        icon_map = {
+            "heart_rate": "mdi:heart-pulse",
+            "resting_heart_rate": "mdi:heart",
+            "heart_rate_variability": "mdi:heart-flash",
+            "respiratory_rate": "mdi:lungs",
+            "vo2_max": "mdi:run",
+            "blood_glucose": "mdi:diabetes",
+            "weight": "mdi:scale-bathroom",
+            "oxygen_saturation": "mdi:water-percent",
+            "active_energy_burned": "mdi:fire",
+            "basal_energy_burned": "mdi:fire-circle",
+            "distance_walking_running": "mdi:walk",
+            "distance_cycling": "mdi:bike",
+            "flights_climbed": "mdi:stairs-up",
+            "body_fat_percentage": "mdi:percent",
+            "lean_body_mass": "mdi:human",
+            "body_mass_index": "mdi:human-male-height",
+            "basal_body_temperature": "mdi:thermometer",
+            "hydration": "mdi:cup-water",
+            "environmental_sound_exposure": "mdi:volume-high",
+            "blood_pressure_systolic": "mdi:heart-cog",
+            "blood_pressure_diastolic": "mdi:heart-cog",
+            "step_count": "mdi:shoe-print",
+        }
+        return icon_map.get(self.metric)
+
+    @property
+    def suggested_display_precision(self) -> int | None:
+        """Return the suggested display precision for this sensor."""
+        # No decimals for counts
+        if self.metric in ("step_count", "flights_climbed"):
+            return 0
+        # One decimal for most measurements
+        if self.metric in (
+            "heart_rate",
+            "resting_heart_rate",
+            "weight",
+            "body_mass_index",
+            "basal_body_temperature",
+        ):
+            return 1
+        # Two decimals for precise measurements
+        if self.metric in (
+            "distance_walking_running",
+            "distance_cycling",
+            "body_fat_percentage",
+        ):
+            return 2
+        return None
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device information to link sensors together."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.entry.entry_id)},
+            name=self.entry.title,
+            manufacturer="HealthSync",
+            model="iOS App",
+            sw_version="1.0",
+        )
+
+    @property
     def _state(self) -> MetricState | None:
         return self.manager.metrics.get(self.metric)
 
     @callback
-    def _handle_update(self, metric: str) -> None:
-        if metric != self.metric:
-            return
+    def _handle_update(self) -> None:
+        """Handle metric update signal (metric-specific, no filtering needed)."""
         self.async_write_ha_state()

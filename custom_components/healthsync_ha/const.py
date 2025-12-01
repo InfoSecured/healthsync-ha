@@ -42,11 +42,13 @@ DEFAULT_METRIC_UNITS = {
 
 # Dispatcher signal builders.
 def signal_new_metric(entry_id: str) -> str:
+    """Signal for when a new metric type is detected."""
     return f"{DOMAIN}_{entry_id}_new_metric"
 
 
-def signal_metric_update(entry_id: str) -> str:
-    return f"{DOMAIN}_{entry_id}_metric_update"
+def signal_metric_update(entry_id: str, metric: str) -> str:
+    """Signal for when a specific metric is updated (metric-specific for efficiency)."""
+    return f"{DOMAIN}_{entry_id}_metric_update_{metric}"
 
 
 DEFAULT_OPTIONS_METRIC = {
