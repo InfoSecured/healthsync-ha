@@ -12,7 +12,8 @@ METRIC_RANGES = {
     "connectivity_test": (0, 1),  # Test metric for webhook validation
     "heart_rate": (30, 250),
     "resting_heart_rate": (30, 150),
-    "heart_rate_variability": (0, 300),
+    "heart_rate_variability": (0, 300),  # legacy name
+    "heart_rate_variability_sdnn": (0, 300),
     "respiratory_rate": (4, 60),
     "vo2_max": (10, 100),
     "blood_glucose": (20, 600),  # mg/dL
@@ -25,13 +26,15 @@ METRIC_RANGES = {
     "flights_climbed": (0, 500),
     "body_fat_percentage": (1, 70),
     "lean_body_mass": (0.5, 300),  # kg
-    "body_mass_index": (10, 70),
+    "body_mass_index": (10, 70),  # legacy name
+    "bmi": (10, 70),
     "basal_body_temperature": (30, 45),  # Celsius
     "hydration": (0, 20),  # L
     "environmental_sound_exposure": (0, 150),  # dB
     "blood_pressure_systolic": (50, 250),  # mmHg
     "blood_pressure_diastolic": (30, 150),  # mmHg
-    "step_count": (0, 100000),
+    "step_count": (0, 100000),  # legacy name
+    "steps": (0, 100000),
 }
 
 # Valid units for each metric type
@@ -39,9 +42,10 @@ VALID_UNITS = {
     "connectivity_test": {"count"},
     "heart_rate": {"bpm", "beats/min"},
     "resting_heart_rate": {"bpm", "beats/min"},
-    "heart_rate_variability": {"ms"},
+    "heart_rate_variability": {"ms"},  # legacy name
+    "heart_rate_variability_sdnn": {"ms"},
     "respiratory_rate": {"breaths/min"},
-    "vo2_max": {"mL/(kg·min)"},
+    "vo2_max": {"mL/(kg·min)", "mL/(kg*min)"},
     "blood_glucose": {"mg/dL", "mmol/L"},
     "weight": {"lb", "kg"},
     "oxygen_saturation": {"%"},
@@ -52,13 +56,15 @@ VALID_UNITS = {
     "flights_climbed": {"count"},
     "body_fat_percentage": {"%"},
     "lean_body_mass": {"lb", "kg"},
-    "body_mass_index": {"count"},
+    "body_mass_index": {"count"},  # legacy name
+    "bmi": {"count", "bmi"},
     "basal_body_temperature": {"degF", "degC"},
     "hydration": {"fl_oz", "fl oz", "fl oz US", "L", "mL"},
-    "environmental_sound_exposure": {"dB"},
+    "environmental_sound_exposure": {"dB", "dBA"},
     "blood_pressure_systolic": {"mmHg"},
     "blood_pressure_diastolic": {"mmHg"},
-    "step_count": {"count"},
+    "step_count": {"count"},  # legacy name
+    "steps": {"steps", "count"},
 }
 
 # Metrics that should always be present

@@ -118,7 +118,7 @@ class AppleHealthMetricSensor(SensorEntity):
         if self.metric in (
             "heart_rate",
             "resting_heart_rate",
-            "heart_rate_variability",
+            "heart_rate_variability_sdnn",
             "respiratory_rate",
             "vo2_max",
             "blood_glucose",
@@ -126,19 +126,19 @@ class AppleHealthMetricSensor(SensorEntity):
             "oxygen_saturation",
             "body_fat_percentage",
             "lean_body_mass",
-            "body_mass_index",
+            "bmi",
             "basal_body_temperature",
             "environmental_sound_exposure",
             "blood_pressure_systolic",
             "blood_pressure_diastolic",
+            "active_energy_burned",
+            "basal_energy_burned",
         ):
             return SensorStateClass.MEASUREMENT
 
         # Cumulative metrics that increase over time
         if self.metric in (
-            "step_count",
-            "active_energy_burned",
-            "basal_energy_burned",
+            "steps",
             "distance_walking_running",
             "distance_cycling",
             "flights_climbed",
@@ -154,7 +154,7 @@ class AppleHealthMetricSensor(SensorEntity):
         icon_map = {
             "heart_rate": "mdi:heart-pulse",
             "resting_heart_rate": "mdi:heart",
-            "heart_rate_variability": "mdi:heart-flash",
+            "heart_rate_variability_sdnn": "mdi:heart-flash",
             "respiratory_rate": "mdi:lungs",
             "vo2_max": "mdi:run",
             "blood_glucose": "mdi:diabetes",
@@ -167,13 +167,13 @@ class AppleHealthMetricSensor(SensorEntity):
             "flights_climbed": "mdi:stairs-up",
             "body_fat_percentage": "mdi:percent",
             "lean_body_mass": "mdi:human",
-            "body_mass_index": "mdi:human-male-height",
+            "bmi": "mdi:human-male-height",
             "basal_body_temperature": "mdi:thermometer",
             "hydration": "mdi:cup-water",
             "environmental_sound_exposure": "mdi:volume-high",
             "blood_pressure_systolic": "mdi:heart-cog",
             "blood_pressure_diastolic": "mdi:heart-cog",
-            "step_count": "mdi:shoe-print",
+            "steps": "mdi:shoe-print",
         }
         return icon_map.get(self.metric)
 
@@ -181,14 +181,14 @@ class AppleHealthMetricSensor(SensorEntity):
     def suggested_display_precision(self) -> int | None:
         """Return the suggested display precision for this sensor."""
         # No decimals for counts
-        if self.metric in ("step_count", "flights_climbed"):
+        if self.metric in ("steps", "flights_climbed"):
             return 0
         # One decimal for most measurements
         if self.metric in (
             "heart_rate",
             "resting_heart_rate",
             "weight",
-            "body_mass_index",
+            "bmi",
             "basal_body_temperature",
         ):
             return 1
