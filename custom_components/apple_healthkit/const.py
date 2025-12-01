@@ -1,6 +1,6 @@
 """Constants for the Apple HealthKit Bridge integration."""
 
-DOMAIN = "healthsync_ha"
+DOMAIN = "apple_healthkit"
 PLATFORMS: list[str] = ["sensor"]
 
 CONF_NAME = "name"

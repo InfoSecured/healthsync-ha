@@ -3,7 +3,7 @@
 This custom integration accepts data from the **HealthSync HA** iOS app (or any client) via a Home Assistant webhook and exposes metrics as sensors.
 
 ## Install
-1. Copy `custom_components/healthsync_ha/` into your Home Assistant config directory.
+1. Copy `custom_components/apple_healthkit/` into your Home Assistant config directory.
 2. Restart Home Assistant.
 3. Add Integration → “HealthSync HA”.
 

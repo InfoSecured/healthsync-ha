@@ -1,11 +1,13 @@
 {
-  "domain": "healthsync_ha",
+  "domain": "apple_healthkit",
   "name": "HealthSync HA",
-  "codeowners": ["@InfoSecured"],
+  "codeowners": [
+    "@InfoSecured"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/InfoSecured/healthsync-ha",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/InfoSecured/healthsync-ha/issues",
   "requirements": [],
-  "version": "0.1.1"
+  "version": "0.1.2"
 }
