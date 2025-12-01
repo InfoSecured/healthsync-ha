@@ -29,7 +29,8 @@ METRIC_RANGES = {
     "body_mass_index": (10, 70),  # legacy name
     "bmi": (10, 70),
     "basal_body_temperature": (30, 45),  # Celsius
-    "hydration": (0, 20),  # L
+    # Hydration: allow larger volumes to support fl oz payloads (e.g., 64-128 fl oz ~= 1.9-3.8 L)
+    "hydration": (0, 400),
     "environmental_sound_exposure": (0, 150),  # dB
     "blood_pressure_systolic": (50, 250),  # mmHg
     "blood_pressure_diastolic": (30, 150),  # mmHg

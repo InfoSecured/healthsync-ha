@@ -102,7 +102,7 @@ class AppleHealthManager:
                     headers={"Content-Type": "text/plain"},
                 )
 
-            _LOGGER.info("Webhook payload received: %s", payload)
+            _LOGGER.debug("Webhook payload received: %s", payload)
             if isinstance(payload, list):
                 # Validate list size to prevent DoS
                 if len(payload) > 100:
