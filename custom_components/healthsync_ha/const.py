@@ -14,6 +14,7 @@ DEFAULT_METRIC_UNITS = {
     "sleep": "hours",
     "blood_glucose": "mg/dL",
     "body_mass": "kg",
+    "weight": "kg",
     "oxygen_saturation": "%",
 }
 

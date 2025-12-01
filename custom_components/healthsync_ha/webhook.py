@@ -98,6 +98,8 @@ class AppleHealthManager:
         if not metric:
             _LOGGER.warning("Webhook payload missing 'metric': %s", payload)
             return
+        if metric == "body_mass":
+            metric = "weight"
         value = payload.get("value")
         unit = payload.get("unit") or DEFAULT_METRIC_UNITS.get(metric, "")
         timestamp = payload.get("timestamp")
