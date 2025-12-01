@@ -1,7 +1,7 @@
 {
   "domain": "apple_healthkit",
   "name": "HealthSync HA",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "documentation": "https://www.home-assistant.io/integrations/",
   "requirements": [],
   "codeowners": [
