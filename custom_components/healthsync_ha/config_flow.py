@@ -86,13 +86,18 @@ class AppleHealthKitOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input: dict | None = None) -> FlowResult:
         """Manage the options."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            # Preserve webhook id even if user edits it in options (not recommended).
+            merged = {**opts, **user_input}
+            if CONF_WEBHOOK_ID not in merged and CONF_WEBHOOK_ID in self.config_entry.data:
+                merged[CONF_WEBHOOK_ID] = self.config_entry.data[CONF_WEBHOOK_ID]
+            return self.async_create_entry(title="", data=merged)
 
         opts = {**DEFAULT_OPTIONS_METRIC, **self.config_entry.options}
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
+                    vol.Optional(CONF_WEBHOOK_ID, description={"suggested_value": self.config_entry.data.get(CONF_WEBHOOK_ID, "")}): cv.string,
                     vol.Required(CONF_WEIGHT_UNIT, default=opts[CONF_WEIGHT_UNIT]): vol.In(
                         ["lb", "kg"]
                     ),
