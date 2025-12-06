@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -22,6 +23,8 @@ from .const import (
     signal_new_metric,
 )
 from .webhook import AppleHealthManager, MetricState
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
