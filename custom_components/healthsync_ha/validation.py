@@ -36,6 +36,31 @@ METRIC_RANGES = {
     "blood_pressure_diastolic": (30, 150),  # mmHg
     "step_count": (0, 100000),  # legacy name
     "steps": (0, 100000),
+    "sleep_in_bed": (0, 1440),  # minutes
+    "sleep_asleep": (0, 1440),
+    "sleep_core": (0, 1440),
+    "sleep_deep": (0, 1440),
+    "sleep_rem": (0, 1440),
+    "sleep_unknown": (0, 1440),
+    "workout_duration_running": (0, 20000),  # seconds
+    "workout_duration_walking": (0, 20000),
+    "workout_duration_cycling": (0, 20000),
+    "workout_duration_hiking": (0, 20000),
+    "workout_duration_strength_training": (0, 20000),
+    "workout_duration_hiit": (0, 20000),
+    "workout_duration_yoga": (0, 20000),
+    "workout_duration_swimming": (0, 20000),
+    "workout_duration_elliptical": (0, 20000),
+    "workout_duration_rowing": (0, 20000),
+    "workout_duration_stairs": (0, 20000),
+    "workout_duration_functional_strength": (0, 20000),
+    "workout_duration_dance": (0, 20000),
+    "workout_duration_mind_body": (0, 20000),
+    "workout_duration_pilates": (0, 20000),
+    "workout_duration_jump_rope": (0, 20000),
+    "workout_duration_cross_training": (0, 20000),
+    "workout_duration_mixed_cardio": (0, 20000),
+    "workout_duration_workout_": (0, 20000),
 }
 
 # Valid units for each metric type
@@ -66,6 +91,30 @@ VALID_UNITS = {
     "blood_pressure_diastolic": {"mmHg"},
     "step_count": {"count"},  # legacy name
     "steps": {"steps", "count"},
+    "sleep_in_bed": {"min"},
+    "sleep_asleep": {"min"},
+    "sleep_core": {"min"},
+    "sleep_deep": {"min"},
+    "sleep_rem": {"min"},
+    "sleep_unknown": {"min"},
+    "workout_duration_running": {"s"},
+    "workout_duration_walking": {"s"},
+    "workout_duration_cycling": {"s"},
+    "workout_duration_hiking": {"s"},
+    "workout_duration_strength_training": {"s"},
+    "workout_duration_hiit": {"s"},
+    "workout_duration_yoga": {"s"},
+    "workout_duration_swimming": {"s"},
+    "workout_duration_elliptical": {"s"},
+    "workout_duration_rowing": {"s"},
+    "workout_duration_stairs": {"s"},
+    "workout_duration_functional_strength": {"s"},
+    "workout_duration_dance": {"s"},
+    "workout_duration_mind_body": {"s"},
+    "workout_duration_pilates": {"s"},
+    "workout_duration_jump_rope": {"s"},
+    "workout_duration_cross_training": {"s"},
+    "workout_duration_mixed_cardio": {"s"},
 }
 
 # Metrics that should always be present

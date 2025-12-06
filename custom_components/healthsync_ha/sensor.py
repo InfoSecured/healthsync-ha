@@ -175,6 +175,9 @@ class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
         ):
             return SensorStateClass.MEASUREMENT
 
+        if self.metric.startswith("workout_"):
+            return SensorStateClass.MEASUREMENT
+
         return None
 
     @property
