@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -14,6 +15,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from .const import (
     CONF_WEBHOOK_ID,
@@ -51,7 +53,7 @@ async def async_setup_entry(
     data["manager_unsub"] = manager_unsub
 
 
-class AppleHealthMetricSensor(SensorEntity):
+class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
     """A sensor representing a single HealthKit metric."""
 
     _attr_should_poll = False
@@ -67,6 +69,7 @@ class AppleHealthMetricSensor(SensorEntity):
         self._attr_name = f"{entry.title} {friendly_metric}"
         self._unit = DEFAULT_METRIC_UNITS.get(metric, None)
         self._unsub = None
+        self._restored_state: MetricState | None = None
 
     async def async_added_to_hass(self) -> None:
         """Register dispatcher callbacks."""
@@ -77,6 +80,29 @@ class AppleHealthMetricSensor(SensorEntity):
             self._handle_update,
         )
         _LOGGER.info("Sensor added: %s (%s)", self.metric, self.unique_id)
+
+        # Restore last known state so HA doesn't show "unknown" after restarts/idle.
+        last_state = await self.async_get_last_state()
+        if last_state and last_state.state not in ("unknown", "unavailable"):
+            try:
+                value: Any = float(last_state.state)
+            except (TypeError, ValueError):
+                value = last_state.state
+            unit = (
+                last_state.attributes.get("unit_of_measurement")
+                or last_state.attributes.get("unit")
+                or self._unit
+            )
+            ts_attr = last_state.attributes.get("last_updated")
+            try:
+                ts = datetime.fromisoformat(ts_attr) if ts_attr else datetime.now(timezone.utc)
+            except Exception:
+                ts = datetime.now(timezone.utc)
+            device = last_state.attributes.get("source_device")
+            self._restored_state = MetricState(
+                value=value, unit=unit or "", last_updated=ts, source_device=device
+            )
+
         # Publish the initial state so the first sample is visible immediately.
         self.async_write_ha_state()
 
@@ -217,7 +243,7 @@ class AppleHealthMetricSensor(SensorEntity):
 
     @property
     def _state(self) -> MetricState | None:
-        return self.manager.metrics.get(self.metric)
+        return self.manager.metrics.get(self.metric) or self._restored_state
 
     @callback
     def _handle_update(self) -> None:
