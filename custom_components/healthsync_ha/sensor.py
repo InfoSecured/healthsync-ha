@@ -73,6 +73,7 @@ class AppleHealthMetricSensor(SensorEntity):
             signal_metric_update(self.entry.entry_id, self.metric),
             self._handle_update,
         )
+        _LOGGER.info("Sensor added: %s (%s)", self.metric, self.unique_id)
         # Publish the initial state so the first sample is visible immediately.
         self.async_write_ha_state()
 
@@ -218,4 +219,11 @@ class AppleHealthMetricSensor(SensorEntity):
     @callback
     def _handle_update(self) -> None:
         """Handle metric update signal (metric-specific, no filtering needed)."""
+        _LOGGER.info(
+            "Writing state metric=%s value=%s unit=%s ts=%s",
+            self.metric,
+            getattr(self._state, "value", None),
+            getattr(self._state, "unit", None),
+            getattr(self._state, "last_updated", None),
+        )
         self.async_write_ha_state()
