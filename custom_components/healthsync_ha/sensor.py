@@ -134,7 +134,8 @@ class AppleHealthMetricSensor(SensorEntity):
         ):
             return SensorStateClass.MEASUREMENT
 
-        # Cumulative metrics that increase over time
+        # Metrics like steps/distance can reset (per-day buckets in HealthKit), so
+        # report them as measurements to avoid HA's total_increasing monotonicity errors.
         if self.metric in (
             "steps",
             "distance_walking_running",
@@ -142,7 +143,7 @@ class AppleHealthMetricSensor(SensorEntity):
             "flights_climbed",
             "hydration",
         ):
-            return SensorStateClass.TOTAL_INCREASING
+            return SensorStateClass.MEASUREMENT
 
         return None
 
