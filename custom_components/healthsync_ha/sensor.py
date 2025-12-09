@@ -112,6 +112,11 @@ class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
             self._unsub()
 
     @property
+    def available(self) -> bool:
+        """Entity is always available - we show last known value even if no recent data."""
+        return True
+
+    @property
     def native_value(self) -> Any:
         state = self._state
         return None if state is None else state.value
