@@ -81,20 +81,20 @@ class AppleHealthKitOptionsFlowHandler(config_entries.OptionsFlow):
     """Handle options for unit preferences."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     async def async_step_init(self, user_input: dict | None = None) -> FlowResult:
         """Manage the options."""
-        opts = {**DEFAULT_OPTIONS_METRIC, **self.config_entry.options}
+        opts = {**DEFAULT_OPTIONS_METRIC, **self._config_entry.options}
 
         if user_input is not None:
             # Preserve webhook id even if user edits it in options (not recommended).
             merged = {**opts, **user_input}
-            if CONF_WEBHOOK_ID not in merged and CONF_WEBHOOK_ID in self.config_entry.data:
-                merged[CONF_WEBHOOK_ID] = self.config_entry.data[CONF_WEBHOOK_ID]
+            if CONF_WEBHOOK_ID not in merged and CONF_WEBHOOK_ID in self._config_entry.data:
+                merged[CONF_WEBHOOK_ID] = self._config_entry.data[CONF_WEBHOOK_ID]
             return self.async_create_entry(title="", data=merged)
         webhook_default = (
-            self.config_entry.data.get(CONF_WEBHOOK_ID)
+            self._config_entry.data.get(CONF_WEBHOOK_ID)
             or opts.get(CONF_WEBHOOK_ID)
             or ""
         )
