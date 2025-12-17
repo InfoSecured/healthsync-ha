@@ -93,11 +93,16 @@ class AppleHealthKitOptionsFlowHandler(config_entries.OptionsFlow):
             if CONF_WEBHOOK_ID not in merged and CONF_WEBHOOK_ID in self.config_entry.data:
                 merged[CONF_WEBHOOK_ID] = self.config_entry.data[CONF_WEBHOOK_ID]
             return self.async_create_entry(title="", data=merged)
+        webhook_default = (
+            self.config_entry.data.get(CONF_WEBHOOK_ID)
+            or opts.get(CONF_WEBHOOK_ID)
+            or ""
+        )
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(CONF_WEBHOOK_ID, description={"suggested_value": self.config_entry.data.get(CONF_WEBHOOK_ID, "")}): cv.string,
+                    vol.Optional(CONF_WEBHOOK_ID, default=webhook_default): cv.string,
                     vol.Required(CONF_WEIGHT_UNIT, default=opts[CONF_WEIGHT_UNIT]): vol.In(
                         ["lb", "kg"]
                     ),
