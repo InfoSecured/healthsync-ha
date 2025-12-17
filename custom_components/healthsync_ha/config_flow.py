@@ -81,7 +81,7 @@ class AppleHealthKitOptionsFlowHandler(config_entries.OptionsFlow):
     """Handle options for unit preferences."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        super().__init__(config_entry)
+        self.config_entry = config_entry
 
     async def async_step_init(self, user_input: dict | None = None) -> FlowResult:
         """Manage the options."""
