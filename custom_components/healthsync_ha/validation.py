@@ -21,9 +21,13 @@ METRIC_RANGES = {
     "oxygen_saturation": (50, 100),  # percentage
     "active_energy_burned": (0, 10000),  # kcal
     "basal_energy_burned": (0, 5000),  # kcal
+    "active_energy_burned_daily_total": (0, 20000),
+    "basal_energy_burned_daily_total": (0, 20000),
     "distance_walking_running": (0, 200),  # km
+    "distance_walking_running_daily_total": (0, 500),
     "distance_cycling": (0, 500),  # km
     "flights_climbed": (0, 500),
+    "flights_climbed_daily_total": (0, 1000),
     "body_fat_percentage": (1, 70),
     "lean_body_mass": (0.5, 300),  # kg
     "body_mass_index": (10, 70),  # legacy name
@@ -36,6 +40,7 @@ METRIC_RANGES = {
     "blood_pressure_diastolic": (30, 150),  # mmHg
     "step_count": (0, 100000),  # legacy name
     "steps": (0, 100000),
+    "steps_daily_total": (0, 100000),
     "sleep_in_bed": (0, 1440),  # minutes
     "sleep_asleep": (0, 1440),
     "sleep_core": (0, 1440),
@@ -76,10 +81,14 @@ VALID_UNITS = {
     "weight": {"lb", "kg"},
     "oxygen_saturation": {"%"},
     "active_energy_burned": {"kcal", "kJ"},
+    "active_energy_burned_daily_total": {"kcal", "kJ"},
     "basal_energy_burned": {"kcal", "kJ"},
+    "basal_energy_burned_daily_total": {"kcal", "kJ"},
     "distance_walking_running": {"mi", "km"},
+    "distance_walking_running_daily_total": {"mi", "km"},
     "distance_cycling": {"mi", "km"},
     "flights_climbed": {"count"},
+    "flights_climbed_daily_total": {"count"},
     "body_fat_percentage": {"%"},
     "lean_body_mass": {"lb", "kg"},
     "body_mass_index": {"count"},  # legacy name
@@ -91,6 +100,7 @@ VALID_UNITS = {
     "blood_pressure_diastolic": {"mmHg"},
     "step_count": {"count"},  # legacy name
     "steps": {"steps", "count"},
+    "steps_daily_total": {"steps", "count"},
     "sleep_in_bed": {"min"},
     "sleep_asleep": {"min"},
     "sleep_core": {"min"},
