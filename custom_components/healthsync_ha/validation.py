@@ -66,6 +66,31 @@ METRIC_RANGES = {
     "workout_duration_cross_training": (0, 20000),
     "workout_duration_mixed_cardio": (0, 20000),
     "workout_duration_workout_": (0, 20000),
+    # Workout energy metrics (kcal)
+    "workout_energy_walking": (0, 5000),
+    "workout_energy_running": (0, 5000),
+    "workout_energy_cycling": (0, 5000),
+    "workout_energy_hiking": (0, 5000),
+    "workout_energy_strength_training": (0, 5000),
+    "workout_energy_hiit": (0, 5000),
+    "workout_energy_yoga": (0, 5000),
+    "workout_energy_swimming": (0, 5000),
+    "workout_energy_functional_strength": (0, 5000),
+    "workout_energy_dance": (0, 5000),
+    "workout_energy_elliptical": (0, 5000),
+    "workout_energy_rowing": (0, 5000),
+    "workout_energy_stairs": (0, 5000),
+    "workout_energy_mind_body": (0, 5000),
+    "workout_energy_pilates": (0, 5000),
+    "workout_energy_jump_rope": (0, 5000),
+    "workout_energy_cross_training": (0, 5000),
+    "workout_energy_mixed_cardio": (0, 5000),
+    # Workout distance metrics (km)
+    "workout_distance_walking": (0, 100),
+    "workout_distance_running": (0, 100),
+    "workout_distance_cycling": (0, 500),
+    "workout_distance_hiking": (0, 100),
+    "workout_distance_swimming": (0, 50),
 }
 
 # Valid units for each metric type
@@ -125,6 +150,31 @@ VALID_UNITS = {
     "workout_duration_jump_rope": {"s"},
     "workout_duration_cross_training": {"s"},
     "workout_duration_mixed_cardio": {"s"},
+    # Workout energy units
+    "workout_energy_walking": {"kcal", "kJ"},
+    "workout_energy_running": {"kcal", "kJ"},
+    "workout_energy_cycling": {"kcal", "kJ"},
+    "workout_energy_hiking": {"kcal", "kJ"},
+    "workout_energy_strength_training": {"kcal", "kJ"},
+    "workout_energy_hiit": {"kcal", "kJ"},
+    "workout_energy_yoga": {"kcal", "kJ"},
+    "workout_energy_swimming": {"kcal", "kJ"},
+    "workout_energy_functional_strength": {"kcal", "kJ"},
+    "workout_energy_dance": {"kcal", "kJ"},
+    "workout_energy_elliptical": {"kcal", "kJ"},
+    "workout_energy_rowing": {"kcal", "kJ"},
+    "workout_energy_stairs": {"kcal", "kJ"},
+    "workout_energy_mind_body": {"kcal", "kJ"},
+    "workout_energy_pilates": {"kcal", "kJ"},
+    "workout_energy_jump_rope": {"kcal", "kJ"},
+    "workout_energy_cross_training": {"kcal", "kJ"},
+    "workout_energy_mixed_cardio": {"kcal", "kJ"},
+    # Workout distance units
+    "workout_distance_walking": {"mi", "km"},
+    "workout_distance_running": {"mi", "km"},
+    "workout_distance_cycling": {"mi", "km"},
+    "workout_distance_hiking": {"mi", "km"},
+    "workout_distance_swimming": {"mi", "km", "yd", "m"},
 }
 
 # Metrics that should always be present

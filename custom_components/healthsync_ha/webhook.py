@@ -113,12 +113,12 @@ class AppleHealthManager:
                         status=413,
                         content_type="text/plain",
                     )
-                _LOGGER.info("Processing batch webhook items: count=%d", len(payload))
+                _LOGGER.debug("Processing batch webhook items: count=%d", len(payload))
                 for item in payload:
                     if isinstance(item, dict):
                         self._process_payload(item)
             elif isinstance(payload, dict):
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Processing single webhook metric=%s ts=%s value=%s",
                     payload.get("metric"),
                     payload.get("timestamp"),
@@ -168,7 +168,7 @@ class AppleHealthManager:
         device = payload.get("device")
 
         value, unit = self._convert_units(metric, value, unit)
-        _LOGGER.info(
+        _LOGGER.debug(
             "Metric update metric=%s value=%s unit=%s device=%s ts=%s",
             metric,
             value,

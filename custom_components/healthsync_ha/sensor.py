@@ -79,7 +79,7 @@ class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
             signal_metric_update(self.entry.entry_id, self.metric),
             self._handle_update,
         )
-        _LOGGER.info("Sensor added: %s (%s)", self.metric, self.unique_id)
+        _LOGGER.debug("Sensor added: %s (%s)", self.metric, self.unique_id)
 
         # Restore last known state so HA doesn't show "unknown" after restarts/idle.
         last_state = await self.async_get_last_state()
@@ -256,7 +256,7 @@ class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
     @callback
     def _handle_update(self) -> None:
         """Handle metric update signal (metric-specific, no filtering needed)."""
-        _LOGGER.info(
+        _LOGGER.debug(
             "Writing state metric=%s value=%s unit=%s ts=%s",
             self.metric,
             getattr(self._state, "value", None),
