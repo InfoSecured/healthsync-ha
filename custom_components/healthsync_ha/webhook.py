@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 import logging
 from typing import Any
 
+from aiohttp import web
 from homeassistant.components import webhook
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -69,7 +70,7 @@ class AppleHealthManager:
 
         async def _handle_webhook(
             hass: HomeAssistant, _id: str, request
-        ) -> webhook.WebhookResponse:
+        ) -> web.Response:
             # Rate limiting check
             now = datetime.now(timezone.utc)
             self._rate_limit_timestamps.append(now)
@@ -86,8 +87,8 @@ class AppleHealthManager:
                     len(self._rate_limit_timestamps),
                     RATE_LIMIT_WINDOW
                 )
-                return webhook.WebhookResponse(
-                    body="rate limit exceeded",
+                return web.Response(
+                    text="rate limit exceeded",
                     status=429,
                     headers={"Content-Type": "text/plain", "Retry-After": "60"},
                 )
@@ -96,10 +97,10 @@ class AppleHealthManager:
                 payload = await request.json()
             except Exception as err:
                 _LOGGER.warning("Webhook received non-JSON payload: %s", err)
-                return webhook.WebhookResponse(
-                    body="invalid json",
+                return web.Response(
+                    text="invalid json",
                     status=400,
-                    headers={"Content-Type": "text/plain"},
+                    content_type="text/plain",
                 )
 
             _LOGGER.debug("Webhook payload received: %s", payload)
@@ -107,10 +108,10 @@ class AppleHealthManager:
                 # Validate list size to prevent DoS
                 if len(payload) > 100:
                     _LOGGER.warning("Webhook payload too large: %d items, max 100", len(payload))
-                    return webhook.WebhookResponse(
-                        body="payload too large",
+                    return web.Response(
+                        text="payload too large",
                         status=413,
-                        headers={"Content-Type": "text/plain"},
+                        content_type="text/plain",
                     )
                 _LOGGER.info("Processing batch webhook items: count=%d", len(payload))
                 for item in payload:
@@ -126,8 +127,8 @@ class AppleHealthManager:
                 self._process_payload(payload)
             else:
                 _LOGGER.warning("Webhook payload ignored (not dict/list): %s", type(payload))
-            return webhook.WebhookResponse(
-                body="ok", status=200, headers={"Content-Type": "text/plain"}
+            return web.Response(
+                text="ok", status=200, content_type="text/plain"
             )
 
         webhook.async_register(
