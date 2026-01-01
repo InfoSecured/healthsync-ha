@@ -17,5 +17,8 @@ Home Assistant custom integration that accepts HealthKit data from the HealthSyn
 {"metric":"heart_rate","value":72,"unit":"count/min","timestamp":"2024-01-01T12:00:00Z","device":"jason-iphone"}
 ```
 
-## Versioning
-Tagged releases follow semantic versioning. HACS requires installing from a tagged release, not from a raw commit.
+## Contributions
+
+We welcome all contributions. Please fork the repository if you would like to contribute.
+
+Come see our other apps and integrations at [WeaveHub](https://weavehub.app).
