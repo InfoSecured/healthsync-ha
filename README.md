@@ -3,7 +3,7 @@
 Home Assistant custom integration that accepts HealthKit data from the HealthSync HA iOS app via a webhook and exposes metrics as sensors.
 
 ## Installation (HACS)
-1. In HACS → Integrations → Custom repositories, add `https://github.com/InfoSecured/healthsync-ha` as type **Integration**.
+1. In HACS → Integrations → Custom repositories, add `https://github.com/WeaveHubHQ/healthsync-ha` as type **Integration**.
 2. Install the integration and choose the latest tagged release (e.g., `v0.1.3`).
 3. Restart Home Assistant.
 4. Add Integration → HealthSync HA. Copy the generated webhook URL into the iOS app.
