@@ -8,6 +8,7 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import config_validation as cv
 from homeassistant.components.webhook import async_generate_id
+from homeassistant.util.unit_system import METRIC_SYSTEM
 
 from .const import (
     CONF_DEVICE_ID,
@@ -66,7 +67,7 @@ class AppleHealthKitConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     def _initial_options(self) -> dict:
-        is_metric = self.hass.config.units.is_metric
+        is_metric = self.hass.config.units is METRIC_SYSTEM
         defaults = DEFAULT_OPTIONS_METRIC.copy()
         if is_metric:
             defaults[CONF_WEIGHT_UNIT] = "kg"
