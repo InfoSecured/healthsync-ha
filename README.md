@@ -17,6 +17,32 @@ Home Assistant custom integration that accepts HealthKit data from the HealthSyn
 {"metric":"heart_rate","value":72,"unit":"count/min","timestamp":"2024-01-01T12:00:00Z","device":"jason-iphone"}
 ```
 
+## Lovelace fitness cards (optional)
+- Pair this integration with the Fitness Cards bundle for Apple Health-style dashboards: https://github.com/WeaveHubHQ/healthsync-ha-cards
+- Cards cover activity, vitals, sleep, body metrics, workouts, and overview with presets and auto-detect.
+- Example YAML (replace with your entities):
+  ```yaml
+  - type: custom:fitness-overview-card
+    period: 7d
+    history: true
+    primary_metrics:
+      - preset: active_energy
+        entity: sensor.health_active_energy_burned_daily_total
+      - preset: steps
+        entity: sensor.health_steps_daily_total
+      - preset: distance_walk_run
+        entity: sensor.health_distance_walking_running_daily_total
+      - preset: weight
+        entity: sensor.health_weight
+    secondary_metrics:
+      - preset: heart_rate
+        entity: sensor.health_heart_rate
+      - preset: spo2
+        entity: sensor.health_oxygen_saturation
+      - preset: body_fat_percentage
+        entity: sensor.health_body_fat_percentage
+  ```
+
 ## Contributions
 
 We welcome all contributions. Please fork the repository if you would like to contribute.
