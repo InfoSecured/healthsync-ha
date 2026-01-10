@@ -14,6 +14,10 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.entity_registry import (
+    async_entries_for_config_entry,
+    async_get as async_get_entity_registry,
+)
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.restore_state import RestoreEntity
 
@@ -38,13 +42,33 @@ async def async_setup_entry(
     data = hass.data[DOMAIN][entry.entry_id]
     manager: AppleHealthManager = data["manager"]
 
+    entity_registry = async_get_entity_registry(hass)
+    known_metrics = set(manager.metrics)
+    prefix = f"{entry.entry_id}_"
+    for er_entry in async_entries_for_config_entry(
+        entity_registry, entry.entry_id
+    ):
+        if er_entry.domain != "sensor":
+            continue
+        unique_id = er_entry.unique_id or ""
+        if unique_id.startswith(prefix):
+            metric = unique_id[len(prefix) :]
+            if metric:
+                known_metrics.add(metric)
+
     entities = [
-        AppleHealthMetricSensor(entry, manager, metric) for metric in manager.metrics
+        AppleHealthMetricSensor(entry, manager, metric)
+        for metric in sorted(known_metrics)
     ]
     async_add_entities(entities)
 
+    added_metrics = set(known_metrics)
+
     @callback
     def _add_metric(metric: str) -> None:
+        if metric in added_metrics:
+            return
+        added_metrics.add(metric)
         async_add_entities([AppleHealthMetricSensor(entry, manager, metric)])
 
     manager_unsub = async_dispatcher_connect(
@@ -102,6 +126,20 @@ class AppleHealthMetricSensor(SensorEntity, RestoreEntity):
             self._restored_state = MetricState(
                 value=value, unit=unit or "", last_updated=ts, source_device=device
             )
+            if (
+                self._restored_state
+                and isinstance(self._restored_state.value, (int, float))
+                and not self._restored_state.samples
+            ):
+                self._restored_state.samples.append(
+                    float(self._restored_state.value)
+                )
+
+        if (
+            self._restored_state
+            and self.metric not in self.manager.metrics
+        ):
+            self.manager.metrics[self.metric] = self._restored_state
 
         # Publish the initial state so the first sample is visible immediately.
         self.async_write_ha_state()

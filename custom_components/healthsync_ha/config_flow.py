@@ -67,7 +67,15 @@ class AppleHealthKitConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     def _initial_options(self) -> dict:
-        is_metric = self.hass.config.units is METRIC_SYSTEM
+        units = getattr(self.hass.config, "units", None)
+        is_metric = False
+        if units is not None:
+            # Support HA versions where UnitSystem lacks is_metric
+            is_metric = (
+                getattr(units, "is_metric", None)
+                or units is METRIC_SYSTEM
+                or getattr(units, "name", None) == "metric"
+            )
         defaults = DEFAULT_OPTIONS_METRIC.copy()
         if is_metric:
             defaults[CONF_WEIGHT_UNIT] = "kg"
